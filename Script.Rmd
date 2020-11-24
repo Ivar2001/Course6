@@ -4,7 +4,9 @@ author: "Ivar, Herke, Yuri en Peter"
 date: "11/24/2020"
 output: html_document
 ---
-```{r}
+
+Inporting the needed library's for using this script
+```{r limma edgeR}
 library(limma)
 library(edgeR)
 ```
