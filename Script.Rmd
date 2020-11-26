@@ -19,7 +19,7 @@ Following block of code opens the file that is needed in this script
 
 ```{r}
 dir <- dirname(rstudioapi::getSourceEditorContext()$path)
-fName <- "WCFS1_cnts.txt"
+fName <- "RNA-Seq-counts.txt"
 ```
 
 
