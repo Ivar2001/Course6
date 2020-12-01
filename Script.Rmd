@@ -16,7 +16,7 @@ library(edgeR)
 Opening file
 Dit R-script analyseerd de expressie van genen van L. plantarum varianten: WCFS1 en NC8. Deze twee bacterien zijn gegroeid op verschillende bodems namelijk glucose (glc) en ribose (rib).
 ```{r}
-dir <- dirname(rstudioapi::getSourceEditorContext()$path)
+fDir <- "./"
 fName <- "RNA-Seq-counts.txt"
 ```
 
@@ -61,9 +61,9 @@ print(design)
 ```{r}
 y <- estimateDisp(y, design)
 
-y <- estimateGLMCommonDisp(y,design)
-y <- estimateGLMTrendedDisp(y,design, method="power")
-y <- estimateGLMTagwiseDisp(y,design)
+#y <- estimateGLMCommonDisp(y,design)
+#y <- estimateGLMTrendedDisp(y,design, method="power")
+#y <- estimateGLMTagwiseDisp(y,design)
 ```
 ###############################################################
 ### Plot results
