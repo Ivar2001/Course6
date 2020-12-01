@@ -54,9 +54,6 @@ print(design)
 
 #y <- estimateDisp(y, design)
 
-y <- estimateGLMCommonDisp(y,design)
-y <- estimateGLMTrendedDisp(y,design, method="power")
-y <- estimateGLMTagwiseDisp(y,design)
 
 ###############################################################
 ### Plot results

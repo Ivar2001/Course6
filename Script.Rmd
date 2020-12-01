@@ -46,8 +46,12 @@ print(summary(y$counts))
 print(y$samples)
 ```
 
+Filteren op low counts
+```{r}
 
-Create Disign matrix
+```
+
+Create Design matrix
 
 ```{r}
 design <- model.matrix(~0+group, data=y$samples)
