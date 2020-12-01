@@ -13,18 +13,85 @@ library(edgeR)
 
 ## R Markdown
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-Following block of code opens the file that is needed in this script
-
+Opening file
+Dit R-script analyseerd de expressie van genen van L. plantarum varianten: WCFS1 en NC8. Deze twee bacterien zijn gegroeid op verschillende bodems namelijk glucose (glc) en ribose (rib).
 ```{r}
 dir <- dirname(rstudioapi::getSourceEditorContext()$path)
 fName <- "RNA-Seq-counts.txt"
 ```
 
-
-
+Read counts
+Bestand inlezen en een object met de counts aanmaken.
 ```{r}
-
+cnts <- read.delim(paste0(fDir,fName), comment.char="#")
+row.names(cnts) <- cnts[,"ID"]
 ```
 
+
+DGE list
+
+```{r}
+exp <- c("WCFS1.glc",  "WCFS1.glc",	"WCFS1.rib",	"WCFS1.rib",	"NC8.glc",	"NC8.glc",	"NC8.rib",	"NC8.rib")
+group <- factor(exp)
+y <- DGEList(counts=cnts[,2:9],group=group)
+```
+
+
+Normalisatie
+
+```{r}
+y <- calcNormFactors(y, method="TMM" )
+print("Count statistics")
+print(summary(y$counts))
+print(y$samples)
+```
+
+
+Create Disign matrix
+
+```{r}
+design <- model.matrix(~0+group, data=y$samples)
+colnames(design) <- levels(y$samples$group)
+print(design)
+```
+
+###############################################################
+### Estimate Dispersion
+###############################################################
+```{r}
+y <- estimateDisp(y, design)
+
+y <- estimateGLMCommonDisp(y,design)
+y <- estimateGLMTrendedDisp(y,design, method="power")
+y <- estimateGLMTagwiseDisp(y,design)
+```
+###############################################################
+### Plot results
+###############################################################
+
+pdf(paste0(fDir,"LP_edgeR.pdf"))
+plotMDS(y)
+plotBCV(y)
+dev.off()
+
+###############################################################
+### Fit data
+###############################################################
+
+fit <- glmFit(y,design)
+
+###############################################################
+### Determine fold changes
+###############################################################
+
+mc <- makeContrasts(exp.r=WCFS1.glc-WCFS1.rib, levels=design)
+
+fit <- glmLRT(fit, contrast=mc)
+
+###############################################################
+### Print top tags
+###############################################################
+
+res<-topTags(fit)
+print(res)
+```
