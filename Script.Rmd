@@ -95,3 +95,8 @@ fit <- glmLRT(fit, contrast=mc)
 res<-topTags(fit)
 print(res)
 ```
+Filteren
+Om genen te selecteren die voor ons onderzoek van toepassing zijn hebben we cut of values ingesteld voor de p-value en de fold changes. Voor de p-value is er gekozen om deze onder de 0.05 te houden en de fold changes moeten hoger zijn dan 1 of lager zijn dan -1.
+```{r}
+filterdata <- filter(fit$table,  PValue<0.05 & (logFC>1|logFC<(-1)))
+```
