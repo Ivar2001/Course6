@@ -5,54 +5,58 @@ date: "11/24/2020"
 output: html_document
 ---
 
-Inporting the needed library's for using this script
+## Gen expressie analyse
+Dit R-script analyseert de expressie van genen van L. plantarum varianten: WCFS1 en NC8. Deze twee bacterien zijn gegroeid op verschillende bodems namelijk glucose (glc) en ribose (rib).
+
+### Library importeren
+Importeren van library's die nodig zijn voor het functioneren van onderstaande script.
+
 ```{r limma edgeR}
 library(limma)
 library(edgeR)
 ```
 
-## R Markdown
+### Bestand inladen
+Het eerste variabel slaat de locatie van het bestand op. Vanzelfsprekend wordt ook de naam van het nodige bestand in een variabel opgeslagen.
 
-Opening file
-Dit R-script analyseerd de expressie van genen van L. plantarum varianten: WCFS1 en NC8. Deze twee bacterien zijn gegroeid op verschillende bodems namelijk glucose (glc) en ribose (rib).
+De read.delim functie wordt over het algemeen gebruikt om tekstbestanden in te lezen waarbij data georganiseerd is in een data matrix layout. Binnen deze functie zijn de bovenste twee variabelen aan elkaar te plakken met paste0. 
+
+Daarbij wordt het kolom dat zorgt voor het oplopende nummering van rijen omgezet naar de ID kolom. Dit is gedaan om te voorkomen dat er verwarring ontstaat. De nummering van R zou namelijk niet overeen komen met de ID's van de ingeladen data. Dit is van belang voor eventuele latere annotatie.
+
 ```{r}
 fDir <- "./"
 fName <- "RNA-Seq-counts.txt"
-```
-
-Read counts
-Bestand inlezen en een object met de counts aanmaken.
-```{r}
-cnts <- read.delim(fName, comment.char="#")
+cnts <- read.delim(paste0(fDir,fName), comment.char="#")
 row.names(cnts) <- cnts[,"ID"]
 ```
 
-
-DGE list
+### DGE list maken
+EdgeR slaat data op in een list-based data object genaamd een DGEList. Dit type object is gemakkelijk te gebruiken binnen R aangezien een DGEList gemanipuleerd kan worden zoals ieder ander lijst in R. Daarbij maakt een DGElist het mogelijk om berekeningen en statistiek toe te passen op de data. In het script worden de counts in de kolommen 2 t/m 9 gegroepeerd met de acht aangemaakte labels.
 
 ```{r}
-exp <- c("WCFS1.glc",  "WCFS1.glc",	"WCFS1.rib",	"WCFS1.rib",	"NC8.glc",	"NC8.glc",	"NC8.rib",	"NC8.rib")
-group <- factor(exp)
+label <- c("WCFS1.glc",  "WCFS1.glc",	"WCFS1.rib",	"WCFS1.rib",	"NC8.glc",	"NC8.glc",	"NC8.rib",	"NC8.rib")
+group <- factor(label)
 y <- DGEList(counts=cnts[,2:9],group=group)
 ```
 
+### Data normaliseren
+Normalisatie wordt toegepast om biologische variatie uit de data te halen, zodat vervolgens de verschillende datasets met elkaar vergeleken kunnen worden. In R wordt dit gedaan door norm factors te berekenen. De TMM (trimmed mean of M-values) methode verwijdert eerst de laagste en hoogste waarden en bepaalt daarna het gemiddelde van de rest van de genen. 
 
-Normalisatie
+Hieronder zijn de norm factors weergegeven, zonder calcNormFactors toe te passen zou deze voor alle rijen 1 zijn. De data is genormaliseerd nadat het met de norm factors vermenigvuldigd is. Dit proces gaat automatisch in R na het veranderen van de norm factors. 
 
 ```{r}
 y <- calcNormFactors(y, method="TMM" )
-print("Count statistics")
-print(summary(y$counts))
 print(y$samples)
 ```
 
-Filteren op low counts
+### Filteren op low counts
+
 ```{r}
 keep <- filterByExpr(y)
 y <- y[keep,]
 ```
 
-Cluster genes using hierarchal clustering
+### Cluster genes using hierarchal clustering
 
 ```{r}
 x <- t(y$counts)
@@ -61,7 +65,8 @@ x <- hclust(x, method = "average")
 plot(x)
 ```
 
-Create Design matrix
+### Design matrix maken
+Een design matrix geeft aan hoe de samples gegroepeerd zijn in de experimenten. In dit geval is te zien dat glucose 1 en 2 gekoppeld zijn aan glucose van het desbetreffende bacterie. Hetzelfde geldt voor ribose. 
 
 ```{r}
 design <- model.matrix(~0+group, data=y$samples)
@@ -69,30 +74,28 @@ colnames(design) <- levels(y$samples$group)
 print(design)
 ```
 
-Estimate Dispersion
+### PCA plot
+De PCA plot (principal component analysis) comprimeert de datasets door de data zo veel mogelijk om te zetten naar de 1ste dimensies. Het verminderen van dimensies van de variatie in de samples maakt het mogelijk om de ze gemakkelijk te visualiseren en met elkaar te vergelijken. De X en Y as geven de fold-change in de log2 schaal weer. De X-as verklaart de hoogste variatie, in dit geval laat het zien dat het verschil in fold-change tussen WCFS1.glucose en WCFS1.ribose zeer groot is. Daarbij valt ook op dat de groepen die in de design matrix gemaakt zijn weinig variatie met elkaar hebben.
 
 ```{r}
 y <- estimateDisp(y, design)
-
-#y <- estimateGLMCommonDisp(y,design)
-#y <- estimateGLMTrendedDisp(y,design, method="power")
-#y <- estimateGLMTagwiseDisp(y,design)
+plotMDS(y)
 ```
 
-Plot results
+### Dispersie plot
+De dispersie plot laat de spreiding van de data zien. Dit zegt iets over hoe goed de verschillende samples met elkaar te vergelijken zijn. Op de X-as staat de CPM (counts per million) op de log schaal en Y-as de dispersie. De rode lijn is de common, het ideale scenario. De blauwe lijn laat de afwijking zien van variatie van de verschillende samples. Hier is te zien dat de trendlijn redelijk overeen komt met de common lijn. 
 
 ```{r}
-plotMDS(y)
 plotBCV(y)
 ```
 
-Fit data
+### Fit data
 
 ```{r}
 fit <- glmFit(y,design)
 ```
 
-Determine fold changes
+### Determine fold changes
 
 ```{r}
 mc <- makeContrasts(exp.r=WCFS1.glc-WCFS1.rib, levels=design)
@@ -100,7 +103,7 @@ mc <- makeContrasts(exp.r=WCFS1.glc-WCFS1.rib, levels=design)
 fit <- glmLRT(fit, contrast=mc)
 ```
 
-Print top tags
+### Print top tags
 
 ```{r}
 res<-topTags(fit)
