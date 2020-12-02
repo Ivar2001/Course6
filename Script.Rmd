@@ -23,7 +23,7 @@ fName <- "RNA-Seq-counts.txt"
 Read counts
 Bestand inlezen en een object met de counts aanmaken.
 ```{r}
-cnts <- read.delim(paste0(fDir,fName), comment.char="#")
+cnts <- read.delim(fName, comment.char="#")
 row.names(cnts) <- cnts[,"ID"]
 ```
 
@@ -48,7 +48,17 @@ print(y$samples)
 
 Filteren op low counts
 ```{r}
+keep <- filterByExpr(y)
+y <- y[keep,]
+```
 
+Cluster genes using hierarchal clustering
+
+```{r}
+x <- t(y$counts)
+x <- dist(x, method = "euclidean")
+x <- hclust(x, method = "average")
+plot(x)
 ```
 
 Create Design matrix
@@ -59,9 +69,8 @@ colnames(design) <- levels(y$samples$group)
 print(design)
 ```
 
-###############################################################
-### Estimate Dispersion
-###############################################################
+Estimate Dispersion
+
 ```{r}
 y <- estimateDisp(y, design)
 
@@ -69,33 +78,31 @@ y <- estimateDisp(y, design)
 #y <- estimateGLMTrendedDisp(y,design, method="power")
 #y <- estimateGLMTagwiseDisp(y,design)
 ```
-###############################################################
-### Plot results
-###############################################################
 
-pdf(paste0(fDir,"LP_edgeR.pdf"))
+Plot results
+
+```{r}
 plotMDS(y)
 plotBCV(y)
-dev.off()
+```
 
-###############################################################
-### Fit data
-###############################################################
+Fit data
 
+```{r}
 fit <- glmFit(y,design)
+```
 
-###############################################################
-### Determine fold changes
-###############################################################
+Determine fold changes
 
+```{r}
 mc <- makeContrasts(exp.r=WCFS1.glc-WCFS1.rib, levels=design)
 
 fit <- glmLRT(fit, contrast=mc)
+```
 
-###############################################################
-### Print top tags
-###############################################################
+Print top tags
 
+```{r}
 res<-topTags(fit)
 print(res)
 ```
