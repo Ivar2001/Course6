@@ -79,14 +79,13 @@ De PCA plot (principal component analysis) comprimeert de datasets door de data 
 
 ```{r}
 y <- estimateDisp(y, design)
-<<<<<<< HEAD
 
 f <- estimateGLMCommonDisp(y,design)
 f <- estimateGLMTrendedDisp(y,design, method="power")
 f <- estimateGLMTagwiseDisp(y,design)
-=======
+
 plotMDS(y)
->>>>>>> bbe13595433f1d2410edb92da0e2fd85272fe22e
+
 ```
 
 ### Dispersie plot
