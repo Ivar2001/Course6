@@ -14,6 +14,7 @@ Importeren van library's die nodig zijn voor het functioneren van onderstaande s
 ```{r limma edgeR}
 library(limma)
 library(edgeR)
+library(dplyr)
 ```
 
 ### Bestand inladen
