@@ -9,7 +9,7 @@ library(edgeR)
 fDir <-  "/home/ivar/Desktop/Han/Jaar2/Blok 2/project/"
 fName <- "WCFS1_cnts.txt"
 
-cnts <- read.delim(paste0(fDir,fName), comment.char="#")
+cnts <- read.delim(fName, comment.char="#")
 
 ### used for topTags identification
 row.names(cnts) <- cnts[,"ID"]
@@ -33,6 +33,24 @@ y <- DGEList(counts=cnts[,2:5],group=group)
 y <- calcNormFactors(y, method="TMM" )
 
 ###############################################################
+### Remove low reads by using FilterbyExpr
+###############################################################
+
+keep <- filterByExpr(y, design)
+y <- y[keep,]
+
+###############################################################
+###
+### Cluster genes using Hierarchal clustering
+### 
+###############################################################
+
+x <- t(y$counts)
+x <- dist(x, method = "euclidean")
+x <- hclust(x, method = "average")
+plot(x)
+
+###############################################################
 ### Check statistics
 ###############################################################
 
@@ -52,17 +70,14 @@ print(design)
 ### Estimate Dispersion
 ###############################################################
 
-#y <- estimateDisp(y, design)
+y <- estimateDisp(y, design)
 
-y <- estimateGLMCommonDisp(y,design)
-y <- estimateGLMTrendedDisp(y,design, method="power")
-y <- estimateGLMTagwiseDisp(y,design)
 
 ###############################################################
 ### Plot results
 ###############################################################
 
-pdf(paste0(fDir,"LP_edgeR.pdf"))
+pdf("LP_edgeR.pdf")
 plotMDS(y)
 plotBCV(y)
 dev.off()
