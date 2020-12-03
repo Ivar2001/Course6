@@ -80,7 +80,13 @@ De PCA plot (principal component analysis) comprimeert de datasets door de data 
 
 ```{r}
 y <- estimateDisp(y, design)
+
+f <- estimateGLMCommonDisp(y,design)
+f <- estimateGLMTrendedDisp(y,design, method="power")
+f <- estimateGLMTagwiseDisp(y,design)
+
 plotMDS(y)
+
 ```
 
 ### Dispersie plot
@@ -88,6 +94,7 @@ De dispersie plot laat de spreiding van de data zien. Dit zegt iets over hoe goe
 
 ```{r}
 plotBCV(y)
+plotBCV(f)
 ```
 
 ### Fit data
