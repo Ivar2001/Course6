@@ -74,9 +74,9 @@ Estimate Dispersion
 ```{r}
 y <- estimateDisp(y, design)
 
-#y <- estimateGLMCommonDisp(y,design)
-#y <- estimateGLMTrendedDisp(y,design, method="power")
-#y <- estimateGLMTagwiseDisp(y,design)
+f <- estimateGLMCommonDisp(y,design)
+f <- estimateGLMTrendedDisp(y,design, method="power")
+f <- estimateGLMTagwiseDisp(y,design)
 ```
 
 Plot results
@@ -84,6 +84,7 @@ Plot results
 ```{r}
 plotMDS(y)
 plotBCV(y)
+plotBCV(f)
 ```
 
 Fit data
