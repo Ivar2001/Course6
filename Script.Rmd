@@ -29,6 +29,11 @@ fDir <- "./"
 fName <- "RNA-Seq-counts.txt"
 cnts <- read.delim(paste0(fDir,fName), comment.char="#")
 row.names(cnts) <- cnts[,"ID"]
+cnts
+f2Name <- "WCFS1_anno.txt"
+annotation <- read.delim(paste0(fDir,f2Name), comment.char = "#")
+row.names(annotation) <- annotation[,row_number(0)]
+annotation
 ```
 
 ### DGE list maken
@@ -106,21 +111,45 @@ fit <- glmFit(y,design)
 ### Determine fold changes
 
 ```{r}
-mc <- makeContrasts(exp.r=WCFS1.glc-WCFS1.rib, levels=design)
-
-fit <- glmLRT(fit, contrast=mc)
+WCFSglcrib <- makeContrasts(exp.r=WCFS1.glc-WCFS1.rib, levels=design)
+WCFSglcribfit <- glmLRT(fit, contrast=WCFSglcrib)
+NC8glcrib <- makeContrasts(exp.r=NC8.glc-NC8.rib, levels=design)
+NC8glcribfit <- glmLRT(fit, contrast=NC8glcrib)
 ```
 
 ### Print top tags
-
+WCFS glucose vs WCFS ribose
 ```{r}
-res<-topTags(fit)
-print(res)
+WCFSglcribres<-topTags(WCFSglcribfit, n=nrow(WCFSglcribfit))
+print(head(WCFSglcribres, 20))
 ```
+
+NC8 glucose vs NC8 ribose
+```{r}
+NC8glcribres<-topTags(NC8glcribfit, n=nrow(NC8glcribfit))
+print(NC8glcribres$table[0, 20])
+```
+
 ### Filteren
 Om genen te selecteren die voor ons onderzoek van toepassing zijn hebben we cut of values ingesteld voor de p-value en de fold changes. Voor de p-value is er gekozen om deze onder de 0.05 te houden en de fold changes moeten hoger zijn dan 1 of lager zijn dan -1.
-
+WCFS glucose vs WCFS ribose
 ```{r}
-filterdata <- filter(fit$table,  fit$table$PValue<0.05 & (logFC>1|logFC<(-1)))
-print(filterdata)
+WCFSfinal <- filter(WCFSglcribres$table,  WCFSglcribres$table$FDR<0.005 &(WCFSglcribres$table$logFC>1|WCFSglcribres$table$logFC<(-1)))
+print(WCFSfinal$table[0, 20])
+```
+
+NC8 glucose vs NC8 ribose
+```{r}
+NC8final <- filter(NC8glcribres$table,  NC8glcribres$table$FDR<0.005 &(NC8glcribres$table$logFC>1|NC8glcribres$table$logFC<(-1)))
+print(NC8final$table[0, 20])
+```
+
+Annotatie toevoegen aan de genen die zijn gefiltered en van hoog naar laag sorteren
+```{r}
+WCFS1_sig <- cbind(WCFSfinal, annotation[rownames(WCFSfinal),])
+NC8_sig <- cbind(NC8final, annotation[rownames(NC8final),])
+WCFS1_sorted <- WCFS1_sig[order(WCFS1_sig[, "logFC"], decreasing = TRUE, na.last = FALSE), ,drop=FALSE]
+NC8_sorted <- NC8_sig[order(NC8_sig[, "logFC"], decreasing = TRUE, na.last = FALSE), ,drop=FALSE]
+WCFS1_sorted
+NC8_sorted
 ```
