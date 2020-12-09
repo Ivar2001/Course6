@@ -15,6 +15,7 @@ Importeren van library's die nodig zijn voor het functioneren van onderstaande s
 library(limma)
 library(edgeR)
 library(dplyr)
+library(xlsx)
 ```
 
 ### Bestand inladen
@@ -150,6 +151,12 @@ WCFS1_sig <- cbind(WCFSfinal, annotation[rownames(WCFSfinal),])
 NC8_sig <- cbind(NC8final, annotation[rownames(NC8final),])
 WCFS1_sorted <- WCFS1_sig[order(WCFS1_sig[, "logFC"], decreasing = TRUE, na.last = FALSE), ,drop=FALSE]
 NC8_sorted <- NC8_sig[order(NC8_sig[, "logFC"], decreasing = TRUE, na.last = FALSE), ,drop=FALSE]
-WCFS1_sorted
-NC8_sorted
+```
+
+Excel file maken met de data en annotaties
+```{r}
+#write.xlsx(WCFS1_sorted, file = "Merged_Genes.xlsx", sheetName = "WCFS1_data", 
+#  col.names = TRUE, row.names = TRUE, append = FALSE)
+#write.xlsx(NC8_sorted, file = "Merged_Genes.xlsx", sheetName = "NC8_data", 
+#  col.names = TRUE, row.names = TRUE, append = TRUE)
 ```
