@@ -1,14 +1,20 @@
 ---
-title: "Script"
-author: "Ivar, Herke, Yuri en Peter"
+title: "Gene expression of L. plantarum WCFS1"
+author: "Ivar van den Akker, Herke Schuffel, Yuri Wit en Peter Cserei"
 date: "11/24/2020"
 output: html_document
 ---
+## Samenvatting
 
-## Gen expressie analyse
+## Inleiding
+Doel: When L. plantarum is grown on a ribose-rich medium genes are upregulated that are required for metabolizing ribose.
+
+## Materiaal en Methode
+
+#### Gen expressie analyse
 Dit R-script analyseert de expressie van genen van L. plantarum varianten: WCFS1 en NC8. Deze twee bacterien zijn gegroeid op verschillende bodems namelijk glucose (glc) en ribose (rib).
 
-### Library importeren
+#### Library importeren
 Importeren van library's die nodig zijn voor het functioneren van onderstaande script.
 
 ```{r limma edgeR}
@@ -18,7 +24,7 @@ library(dplyr)
 library(xlsx)
 ```
 
-### Bestand inladen
+#### Bestand inladen
 Het eerste variabel slaat de locatie van het bestand op. Vanzelfsprekend wordt ook de naam van het nodige bestand in een variabel opgeslagen.
 
 De read.delim functie wordt over het algemeen gebruikt om tekstbestanden in te lezen waarbij data georganiseerd is in een data matrix layout. Binnen deze functie zijn de bovenste twee variabelen aan elkaar te plakken met paste0. 
@@ -30,14 +36,12 @@ fDir <- "./"
 fName <- "RNA-Seq-counts.txt"
 cnts <- read.delim(paste0(fDir,fName), comment.char="#")
 row.names(cnts) <- cnts[,"ID"]
-cnts
 f2Name <- "WCFS1_anno.txt"
 annotation <- read.delim(paste0(fDir,f2Name), comment.char = "#")
 row.names(annotation) <- annotation[,row_number(0)]
-annotation
 ```
 
-### DGE list maken
+#### DGE list maken
 EdgeR slaat data op in een list-based data object genaamd een DGEList. Dit type object is gemakkelijk te gebruiken binnen R aangezien een DGEList gemanipuleerd kan worden zoals ieder ander lijst in R. Daarbij maakt een DGElist het mogelijk om berekeningen en statistiek toe te passen op de data. In het script worden de counts in de kolommen 2 t/m 9 gegroepeerd met de acht aangemaakte labels.
 
 ```{r}
@@ -46,7 +50,7 @@ group <- factor(label)
 y <- DGEList(counts=cnts[,2:9],group=group)
 ```
 
-### Data normaliseren
+#### Data normaliseren
 Normalisatie wordt toegepast om biologische variatie uit de data te halen, zodat vervolgens de verschillende datasets met elkaar vergeleken kunnen worden. In R wordt dit gedaan door norm factors te berekenen. De TMM (trimmed mean of M-values) methode verwijdert eerst de laagste en hoogste waarden en bepaalt daarna het gemiddelde van de rest van de genen. 
 
 Hieronder zijn de norm factors weergegeven, zonder calcNormFactors toe te passen zou deze voor alle rijen 1 zijn. De data is genormaliseerd nadat het met de norm factors vermenigvuldigd is. Dit proces gaat automatisch in R na het veranderen van de norm factors. 
@@ -56,23 +60,15 @@ y <- calcNormFactors(y, method="TMM" )
 print(y$samples)
 ```
 
-### Filteren op low counts
+#### Filteren op low counts
 
 ```{r}
 keep <- filterByExpr(y)
 y <- y[keep,]
 ```
 
-### Cluster genes using hierarchal clustering
 
-```{r}
-x <- t(y$counts)
-x <- dist(x, method = "euclidean")
-x <- hclust(x, method = "average")
-plot(x)
-```
-
-### Design matrix maken
+#### Design matrix maken
 Een design matrix geeft aan hoe de samples gegroepeerd zijn in de experimenten. In dit geval is te zien dat glucose 1 en 2 gekoppeld zijn aan glucose van het desbetreffende bacterie. Hetzelfde geldt voor ribose. 
 
 ```{r}
@@ -80,36 +76,22 @@ design <- model.matrix(~0+group, data=y$samples)
 colnames(design) <- levels(y$samples$group)
 print(design)
 ```
-
-### PCA plot
-De PCA plot (principal component analysis) comprimeert de datasets door de data zo veel mogelijk om te zetten naar de 1ste dimensies. Het verminderen van dimensies van de variatie in de samples maakt het mogelijk om de ze gemakkelijk te visualiseren en met elkaar te vergelijken. De X en Y as geven de fold-change in de log2 schaal weer. De X-as verklaart de hoogste variatie, in dit geval laat het zien dat het verschil in fold-change tussen WCFS1.glucose en WCFS1.ribose zeer groot is. Daarbij valt ook op dat de groepen die in de design matrix gemaakt zijn weinig variatie met elkaar hebben.
-
+#### Despersie berekenen
 ```{r}
 y <- estimateDisp(y, design)
 
 f <- estimateGLMCommonDisp(y,design)
 f <- estimateGLMTrendedDisp(y,design, method="power")
 f <- estimateGLMTagwiseDisp(y,design)
-
-plotMDS(y)
-
 ```
 
-### Dispersie plot
-De dispersie plot laat de spreiding van de data zien. Dit zegt iets over hoe goed de verschillende samples met elkaar te vergelijken zijn. Op de X-as staat de CPM (counts per million) op de log schaal en Y-as de dispersie. De rode lijn is de common, het ideale scenario. De blauwe lijn laat de afwijking zien van variatie van de verschillende samples. Hier is te zien dat de trendlijn redelijk overeen komt met de common lijn. 
-
-```{r}
-plotBCV(y)
-plotBCV(f)
-```
-
-### Fit data
+#### Fit data
 
 ```{r}
 fit <- glmFit(y,design)
 ```
 
-### Determine fold changes
+#### Determine fold changes
 
 ```{r}
 WCFSglcrib <- makeContrasts(exp.r=WCFS1.glc-WCFS1.rib, levels=design)
@@ -118,31 +100,27 @@ NC8glcrib <- makeContrasts(exp.r=NC8.glc-NC8.rib, levels=design)
 NC8glcribfit <- glmLRT(fit, contrast=NC8glcrib)
 ```
 
-### Print top tags
+#### Print top tags
 WCFS glucose vs WCFS ribose
 ```{r}
 WCFSglcribres<-topTags(WCFSglcribfit, n=nrow(WCFSglcribfit))
-print(head(WCFSglcribres, 20))
 ```
 
 NC8 glucose vs NC8 ribose
 ```{r}
 NC8glcribres<-topTags(NC8glcribfit, n=nrow(NC8glcribfit))
-print(NC8glcribres$table[0, 20])
 ```
 
-### Filteren
+#### Filteren
 Om genen te selecteren die voor ons onderzoek van toepassing zijn hebben we cut of values ingesteld voor de p-value en de fold changes. Voor de p-value is er gekozen om deze onder de 0.05 te houden en de fold changes moeten hoger zijn dan 1 of lager zijn dan -1.
 WCFS glucose vs WCFS ribose
 ```{r}
 WCFSfinal <- filter(WCFSglcribres$table,  WCFSglcribres$table$FDR<0.005 &(WCFSglcribres$table$logFC>1|WCFSglcribres$table$logFC<(-1)))
-print(WCFSfinal$table[0, 20])
 ```
 
 NC8 glucose vs NC8 ribose
 ```{r}
 NC8final <- filter(NC8glcribres$table,  NC8glcribres$table$FDR<0.005 &(NC8glcribres$table$logFC>1|NC8glcribres$table$logFC<(-1)))
-print(NC8final$table[0, 20])
 ```
 
 Annotatie toevoegen aan de genen die zijn gefiltered en van hoog naar laag sorteren
@@ -160,3 +138,31 @@ Excel file maken met de data en annotaties
 #write.xlsx(NC8_sorted, file = "Merged_Genes.xlsx", sheetName = "NC8_data", 
 #  col.names = TRUE, row.names = TRUE, append = TRUE)
 ```
+
+## Resultaten
+
+#### Cluster genes using hierarchal clustering
+
+```{r}
+x <- t(y$counts)
+x <- dist(x, method = "euclidean")
+x <- hclust(x, method = "average")
+plot(x)
+```
+
+#### PCA plot
+De PCA plot (principal component analysis) comprimeert de datasets door de data zo veel mogelijk om te zetten naar de 1ste dimensies. Het verminderen van dimensies van de variatie in de samples maakt het mogelijk om de ze gemakkelijk te visualiseren en met elkaar te vergelijken. De X en Y as geven de fold-change in de log2 schaal weer. De X-as verklaart de hoogste variatie, in dit geval laat het zien dat het verschil in fold-change tussen WCFS1.glucose en WCFS1.ribose zeer groot is. Daarbij valt ook op dat de groepen die in de design matrix gemaakt zijn weinig variatie met elkaar hebben.
+
+```{r}
+plotMDS(y)
+```
+
+#### Dispersie plot
+De dispersie plot laat de spreiding van de data zien. Dit zegt iets over hoe goed de verschillende samples met elkaar te vergelijken zijn. Op de X-as staat de CPM (counts per million) op de log schaal en Y-as de dispersie. De rode lijn is de common, het ideale scenario. De blauwe lijn laat de afwijking zien van variatie van de verschillende samples. Hier is te zien dat de trendlijn redelijk overeen komt met de common lijn. 
+
+```{r}
+plotBCV(y)
+plotBCV(f)
+```
+
+## Conclusie
