@@ -2,7 +2,10 @@
 title: "Gene expression of L. plantarum WCFS1"
 author: "Ivar van den Akker, Herke Schuffel, Yuri Wit en Peter Cserei"
 date: "11/24/2020"
-output: html_document
+output:
+  pdf_document:
+    toc: true
+    toc_depth: 4
 ---
 ## Samenvatting
 
