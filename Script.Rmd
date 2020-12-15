@@ -150,6 +150,15 @@ Excel file maken met de data en annotaties
 #  col.names = TRUE, row.names = TRUE, append = TRUE)
 ```
 
+#### KEGG Mapper
+```{r}
+WCFS1_final_names <- c(rownames(head(WCFS1_sorted, 5)), rownames(tail(WCFS1_sorted, 5)))
+WCFS1<-data.frame(WCFS1_final_names)
+WCFS1$logFC<-c((head(WCFS1_sorted, 5)$logFC), (tail(WCFS1_sorted, 5)$logFC))
+NC8_final_names <- c(rownames(head(NC8_sorted, 5)), rownames(tail(NC8_sorted, 5)))
+NC8<-data.frame(NC8_final_names)
+NC8$logFC<-c((head(NC8_sorted, 5)$logFC), (tail(NC8_sorted, 5)$logFC))
+```
 ## Resultaten
 
 #### Cluster genes using hierarchal clustering
