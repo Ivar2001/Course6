@@ -13,8 +13,6 @@ output:
 Doel: When L. plantarum is grown on a ribose-rich medium genes are upregulated that are required for metabolizing ribose.
 
 ## Materiaal en Methode
-
-#### Gen expressie analyse
 Dit R-script analyseert de expressie van genen van L. plantarum varianten: WCFS1 en NC8. Deze twee bacterien zijn gegroeid op verschillende bodems namelijk glucose (glc) en ribose (rib).
 
 #### Library importeren
@@ -39,6 +37,7 @@ fDir <- "./"
 fName <- "RNA-Seq-counts.txt"
 cnts <- read.delim(paste0(fDir,fName), comment.char="#")
 row.names(cnts) <- cnts[,"ID"]
+
 f2Name <- "WCFS1_anno.txt"
 annotation <- read.delim(paste0(fDir,f2Name), comment.char = "#")
 row.names(annotation) <- annotation[,row_number(0)]
@@ -54,9 +53,9 @@ y <- DGEList(counts=cnts[,2:9],group=group)
 ```
 
 #### Data normaliseren
-Normalisatie wordt toegepast om biologische variatie uit de data te halen, zodat vervolgens de verschillende datasets met elkaar vergeleken kunnen worden. In R wordt dit gedaan door norm factors te berekenen. De TMM (trimmed mean of M-values) methode verwijdert eerst de laagste en hoogste waarden en bepaalt daarna het gemiddelde van de rest van de genen. 
+Normalisatie wordt toegepast om biologische variatie uit de data te halen, zodat vervolgens de verschillende datasets met elkaar vergeleken kunnen worden. In R wordt dit gedaan door norm factors te berekenen. De TMM (trimmed mean of M-values) methode verwijdert eerst de laagste en hoogste waarden en bepaalt daarna het gemiddelde van de rest van de genen.
 
-Hieronder zijn de norm factors weergegeven, zonder calcNormFactors toe te passen zou deze voor alle rijen 1 zijn. De data is genormaliseerd nadat het met de norm factors vermenigvuldigd is. Dit proces gaat automatisch in R na het veranderen van de norm factors. 
+Hieronder zijn de norm factors weergegeven, zonder calcNormFactors toe te passen zou deze voor alle rijen 1 zijn. De data is genormaliseerd nadat het met de norm factors vermenigvuldigd is. Dit proces gaat automatisch in R na het veranderen van de norm factors.
 
 ```{r}
 y <- calcNormFactors(y, method="TMM" )
@@ -64,12 +63,12 @@ print(y$samples)
 ```
 
 #### Filteren op low counts
+Deze functie zorgt ervoor dat genen geselecteert worden die niet significant genoeg zijn voor de dataset. Aangezien de dataset waarmee gewerkt wordt al een keer is gefilterd, resulteert de functie "filter by expression" maar in een hele kleine hoeveelheid genen, namelijk 20 stuks.
 
 ```{r}
 keep <- filterByExpr(y)
 y <- y[keep,]
 ```
-
 
 #### Design matrix maken
 Een design matrix geeft aan hoe de samples gegroepeerd zijn in de experimenten. In dit geval is te zien dat glucose 1 en 2 gekoppeld zijn aan glucose van het desbetreffende bacterie. Hetzelfde geldt voor ribose. 
@@ -79,7 +78,10 @@ design <- model.matrix(~0+group, data=y$samples)
 colnames(design) <- levels(y$samples$group)
 print(design)
 ```
+
 #### Despersie berekenen
+Er zijn twee verschillende manieren getest om de dispersie te berekenen. 
+
 ```{r}
 y <- estimateDisp(y, design)
 
@@ -89,6 +91,7 @@ f <- estimateGLMTagwiseDisp(y,design)
 ```
 
 #### Fit data
+De glmFit functie maakt een DGEGLM object aan waarin allerlei data wordt verwerkt en berekent daarbij onder andere de p-values en fold-changes.
 
 ```{r}
 fit <- glmFit(y,design)
@@ -105,6 +108,7 @@ NC8glcribfit <- glmLRT(fit, contrast=NC8glcrib)
 
 #### Print top tags
 WCFS glucose vs WCFS ribose
+
 ```{r}
 WCFSglcribres<-topTags(WCFSglcribfit, n=nrow(WCFSglcribfit))
 ```
@@ -117,16 +121,19 @@ NC8glcribres<-topTags(NC8glcribfit, n=nrow(NC8glcribfit))
 #### Filteren
 Om genen te selecteren die voor ons onderzoek van toepassing zijn hebben we cut of values ingesteld voor de p-value en de fold changes. Voor de p-value is er gekozen om deze onder de 0.05 te houden en de fold changes moeten hoger zijn dan 1 of lager zijn dan -1.
 WCFS glucose vs WCFS ribose
+
 ```{r}
 WCFSfinal <- filter(WCFSglcribres$table,  WCFSglcribres$table$FDR<0.005 &(WCFSglcribres$table$logFC>1|WCFSglcribres$table$logFC<(-1)))
 ```
 
 NC8 glucose vs NC8 ribose
+
 ```{r}
 NC8final <- filter(NC8glcribres$table,  NC8glcribres$table$FDR<0.005 &(NC8glcribres$table$logFC>1|NC8glcribres$table$logFC<(-1)))
 ```
 
 Annotatie toevoegen aan de genen die zijn gefiltered en van hoog naar laag sorteren
+
 ```{r}
 WCFS1_sig <- cbind(WCFSfinal, annotation[rownames(WCFSfinal),])
 NC8_sig <- cbind(NC8final, annotation[rownames(NC8final),])
@@ -135,6 +142,7 @@ NC8_sorted <- NC8_sig[order(NC8_sig[, "logFC"], decreasing = TRUE, na.last = FAL
 ```
 
 Excel file maken met de data en annotaties
+
 ```{r}
 #write.xlsx(WCFS1_sorted, file = "Merged_Genes.xlsx", sheetName = "WCFS1_data", 
 #  col.names = TRUE, row.names = TRUE, append = FALSE)
