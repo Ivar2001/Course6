@@ -23,6 +23,8 @@ library(limma)
 library(edgeR)
 library(dplyr)
 library(xlsx)
+library(factoextra)
+library(cluster)
 ```
 
 #### Bestand inladen
@@ -159,6 +161,14 @@ NC8_final_names <- c(rownames(head(NC8_sorted, 5)), rownames(tail(NC8_sorted, 5)
 NC8<-data.frame(NC8_final_names)
 NC8$logFC<-c((head(NC8_sorted, 5)$logFC), (tail(NC8_sorted, 5)$logFC))
 ```
+
+#### Heat Map
+```{r}
+# Sorry ik was verkeerde aan het doen mischien heb je er wel wat aan
+HMNC8 = data.matrix(NC8final %>% select(-(LR:FDR)))
+heatmap(HMNC8)
+```
+
 ## Resultaten
 
 #### Cluster genes using hierarchal clustering
@@ -185,4 +195,9 @@ plotBCV(y)
 plotBCV(f)
 ```
 
+#### K-means
+```{r}
+km <- kmeans((NC8final %>% select(-(logCPM:FDR))), centers = 5)
+fviz_cluster(km, data = (NC8final %>% select(-(LR:FDR))))
+```
 ## Conclusie
