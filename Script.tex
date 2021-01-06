@@ -1,0 +1,523 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Gene expression of L. plantarum WCFS1},
+  pdfauthor={Ivar van den Akker, Herke Schuffel, Yuri Wit en Peter Cserei},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+
+\title{Gene expression of L. plantarum WCFS1}
+\author{Ivar van den Akker, Herke Schuffel, Yuri Wit en Peter Cserei}
+\date{11/24/2020}
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{4}
+\tableofcontents
+}
+\hypertarget{samenvatting}{%
+\subsection{Samenvatting}\label{samenvatting}}
+
+\hypertarget{inleiding}{%
+\subsection{Inleiding}\label{inleiding}}
+
+Doel: When L. plantarum is grown on a ribose-rich medium genes are
+upregulated that are required for metabolizing ribose.
+
+\hypertarget{materiaal-en-methode}{%
+\subsection{Materiaal en Methode}\label{materiaal-en-methode}}
+
+Dit R-script analyseert de expressie van genen van L. plantarum
+varianten: WCFS1 en NC8. Deze twee bacterien zijn gegroeid op
+verschillende bodems namelijk glucose (glc) en ribose (rib).
+
+\hypertarget{library-importeren}{%
+\paragraph{Library importeren}\label{library-importeren}}
+
+Importeren van library's die nodig zijn voor het functioneren van
+onderstaande script.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(limma)}
+\KeywordTok{library}\NormalTok{(edgeR)}
+\KeywordTok{library}\NormalTok{(dplyr)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Attaching package: 'dplyr'
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:stats':
+## 
+##     filter, lag
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(xlsx)}
+\KeywordTok{library}\NormalTok{(factoextra)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: ggplot2
+\end{verbatim}
+
+\begin{verbatim}
+## Welcome! Want to learn more? See two factoextra-related books at https://goo.gl/ve3WBa
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(cluster)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{bestand-inladen}{%
+\paragraph{Bestand inladen}\label{bestand-inladen}}
+
+Het eerste variabel slaat de locatie van het bestand op. Vanzelfsprekend
+wordt ook de naam van het nodige bestand in een variabel opgeslagen.
+
+De read.delim functie wordt over het algemeen gebruikt om tekstbestanden
+in te lezen waarbij data georganiseerd is in een data matrix layout.
+Binnen deze functie zijn de bovenste twee variabelen aan elkaar te
+plakken met paste0.
+
+Daarbij wordt het kolom dat zorgt voor het oplopende nummering van rijen
+omgezet naar de ID kolom. Dit is gedaan om te voorkomen dat er
+verwarring ontstaat. De nummering van R zou namelijk niet overeen komen
+met de ID's van de ingeladen data. Dit is van belang voor eventuele
+latere annotatie.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fDir <-}\StringTok{ "./"}
+\NormalTok{fName <-}\StringTok{ "RNA-Seq-counts.txt"}
+\NormalTok{cnts <-}\StringTok{ }\KeywordTok{read.delim}\NormalTok{(}\KeywordTok{paste0}\NormalTok{(fDir,fName), }\DataTypeTok{comment.char=}\StringTok{"#"}\NormalTok{)}
+\KeywordTok{row.names}\NormalTok{(cnts) <-}\StringTok{ }\NormalTok{cnts[,}\StringTok{"ID"}\NormalTok{]}
+
+\NormalTok{f2Name <-}\StringTok{ "WCFS1_anno.txt"}
+\NormalTok{annotation <-}\StringTok{ }\KeywordTok{read.delim}\NormalTok{(}\KeywordTok{paste0}\NormalTok{(fDir,f2Name), }\DataTypeTok{comment.char =} \StringTok{"#"}\NormalTok{)}
+\KeywordTok{row.names}\NormalTok{(annotation) <-}\StringTok{ }\NormalTok{annotation[,}\KeywordTok{row_number}\NormalTok{(}\DecValTok{0}\NormalTok{)]}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{dge-list-maken}{%
+\paragraph{DGE list maken}\label{dge-list-maken}}
+
+EdgeR slaat data op in een list-based data object genaamd een DGEList.
+Dit type object is gemakkelijk te gebruiken binnen R aangezien een
+DGEList gemanipuleerd kan worden zoals ieder ander lijst in R. Daarbij
+maakt een DGElist het mogelijk om berekeningen en statistiek toe te
+passen op de data. In het script worden de counts in de kolommen 2 t/m 9
+gegroepeerd met de acht aangemaakte labels.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{label <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"WCFS1.glc"}\NormalTok{,  }\StringTok{"WCFS1.glc"}\NormalTok{,   }\StringTok{"WCFS1.rib"}\NormalTok{,    }\StringTok{"WCFS1.rib"}\NormalTok{,    }\StringTok{"NC8.glc"}\NormalTok{,  }\StringTok{"NC8.glc"}\NormalTok{,  }\StringTok{"NC8.rib"}\NormalTok{,  }\StringTok{"NC8.rib"}\NormalTok{)}
+\NormalTok{group <-}\StringTok{ }\KeywordTok{factor}\NormalTok{(label)}
+\NormalTok{y <-}\StringTok{ }\KeywordTok{DGEList}\NormalTok{(}\DataTypeTok{counts=}\NormalTok{cnts[,}\DecValTok{2}\OperatorTok{:}\DecValTok{9}\NormalTok{],}\DataTypeTok{group=}\NormalTok{group)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{data-normaliseren}{%
+\paragraph{Data normaliseren}\label{data-normaliseren}}
+
+Normalisatie wordt toegepast om biologische variatie uit de data te
+halen, zodat vervolgens de verschillende datasets met elkaar vergeleken
+kunnen worden. In R wordt dit gedaan door norm factors te berekenen. De
+TMM (trimmed mean of M-values) methode verwijdert eerst de laagste en
+hoogste waarden en bepaalt daarna het gemiddelde van de rest van de
+genen.
+
+Hieronder zijn de norm factors weergegeven, zonder calcNormFactors toe
+te passen zou deze voor alle rijen 1 zijn. De data is genormaliseerd
+nadat het met de norm factors vermenigvuldigd is. Dit proces gaat
+automatisch in R na het veranderen van de norm factors.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{y <-}\StringTok{ }\KeywordTok{calcNormFactors}\NormalTok{(y, }\DataTypeTok{method=}\StringTok{"TMM"}\NormalTok{ )}
+\KeywordTok{print}\NormalTok{(y}\OperatorTok{$}\NormalTok{samples)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                 group lib.size norm.factors
+## WCFS1.glc.1 WCFS1.glc 10153710    0.9850714
+## WCFS1.glc.2 WCFS1.glc 10615392    0.9830048
+## WCFS1.rib.1 WCFS1.rib  8959060    0.9986438
+## WCFS1.rib.2 WCFS1.rib  9340139    1.0375329
+## NC8.glc.1     NC8.glc  9821662    0.9390775
+## NC8.glc.2     NC8.glc 10261922    1.0155475
+## NC8.rib.1     NC8.rib  9951954    0.9899344
+## NC8.rib.2     NC8.rib  9957519    1.0557378
+\end{verbatim}
+
+\hypertarget{filteren-op-low-counts}{%
+\paragraph{Filteren op low counts}\label{filteren-op-low-counts}}
+
+Deze functie zorgt ervoor dat genen geselecteert worden die niet
+significant genoeg zijn voor de dataset. Aangezien de dataset waarmee
+gewerkt wordt al een keer is gefilterd, resulteert de functie ``filter
+by expression'' maar in een hele kleine hoeveelheid genen, namelijk 20
+stuks.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{keep <-}\StringTok{ }\KeywordTok{filterByExpr}\NormalTok{(y)}
+\NormalTok{y <-}\StringTok{ }\NormalTok{y[keep,]}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{design-matrix-maken}{%
+\paragraph{Design matrix maken}\label{design-matrix-maken}}
+
+Een design matrix geeft aan hoe de samples gegroepeerd zijn in de
+experimenten. In dit geval is te zien dat glucose 1 en 2 gekoppeld zijn
+aan glucose van het desbetreffende bacterie. Hetzelfde geldt voor
+ribose.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{design <-}\StringTok{ }\KeywordTok{model.matrix}\NormalTok{(}\OperatorTok{~}\DecValTok{0}\OperatorTok{+}\NormalTok{group, }\DataTypeTok{data=}\NormalTok{y}\OperatorTok{$}\NormalTok{samples)}
+\KeywordTok{colnames}\NormalTok{(design) <-}\StringTok{ }\KeywordTok{levels}\NormalTok{(y}\OperatorTok{$}\NormalTok{samples}\OperatorTok{$}\NormalTok{group)}
+\KeywordTok{print}\NormalTok{(design)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##             NC8.glc NC8.rib WCFS1.glc WCFS1.rib
+## WCFS1.glc.1       0       0         1         0
+## WCFS1.glc.2       0       0         1         0
+## WCFS1.rib.1       0       0         0         1
+## WCFS1.rib.2       0       0         0         1
+## NC8.glc.1         1       0         0         0
+## NC8.glc.2         1       0         0         0
+## NC8.rib.1         0       1         0         0
+## NC8.rib.2         0       1         0         0
+## attr(,"assign")
+## [1] 1 1 1 1
+## attr(,"contrasts")
+## attr(,"contrasts")$group
+## [1] "contr.treatment"
+\end{verbatim}
+
+\hypertarget{despersie-berekenen}{%
+\paragraph{Despersie berekenen}\label{despersie-berekenen}}
+
+Er zijn twee verschillende manieren getest om de dispersie te berekenen.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{y <-}\StringTok{ }\KeywordTok{estimateDisp}\NormalTok{(y, design)}
+
+\NormalTok{f <-}\StringTok{ }\KeywordTok{estimateGLMCommonDisp}\NormalTok{(y,design)}
+\NormalTok{f <-}\StringTok{ }\KeywordTok{estimateGLMTrendedDisp}\NormalTok{(y,design, }\DataTypeTok{method=}\StringTok{"power"}\NormalTok{)}
+\NormalTok{f <-}\StringTok{ }\KeywordTok{estimateGLMTagwiseDisp}\NormalTok{(y,design)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{fit-data}{%
+\paragraph{Fit data}\label{fit-data}}
+
+De glmFit functie maakt een DGEGLM object aan waarin allerlei data wordt
+verwerkt en berekent daarbij onder andere de p-values en fold-changes.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fit <-}\StringTok{ }\KeywordTok{glmFit}\NormalTok{(y,design)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{determine-fold-changes}{%
+\paragraph{Determine fold changes}\label{determine-fold-changes}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{WCFSglcrib <-}\StringTok{ }\KeywordTok{makeContrasts}\NormalTok{(}\DataTypeTok{exp.r=}\NormalTok{WCFS1.glc}\OperatorTok{-}\NormalTok{WCFS1.rib, }\DataTypeTok{levels=}\NormalTok{design)}
+\NormalTok{WCFSglcribfit <-}\StringTok{ }\KeywordTok{glmLRT}\NormalTok{(fit, }\DataTypeTok{contrast=}\NormalTok{WCFSglcrib)}
+\NormalTok{NC8glcrib <-}\StringTok{ }\KeywordTok{makeContrasts}\NormalTok{(}\DataTypeTok{exp.r=}\NormalTok{NC8.glc}\OperatorTok{-}\NormalTok{NC8.rib, }\DataTypeTok{levels=}\NormalTok{design)}
+\NormalTok{NC8glcribfit <-}\StringTok{ }\KeywordTok{glmLRT}\NormalTok{(fit, }\DataTypeTok{contrast=}\NormalTok{NC8glcrib)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{print-top-tags}{%
+\paragraph{Print top tags}\label{print-top-tags}}
+
+WCFS glucose vs WCFS ribose
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{WCFSglcribres<-}\KeywordTok{topTags}\NormalTok{(WCFSglcribfit, }\DataTypeTok{n=}\KeywordTok{nrow}\NormalTok{(WCFSglcribfit))}
+\end{Highlighting}
+\end{Shaded}
+
+NC8 glucose vs NC8 ribose
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{NC8glcribres<-}\KeywordTok{topTags}\NormalTok{(NC8glcribfit, }\DataTypeTok{n=}\KeywordTok{nrow}\NormalTok{(NC8glcribfit))}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{filteren}{%
+\paragraph{Filteren}\label{filteren}}
+
+Om genen te selecteren die voor ons onderzoek van toepassing zijn hebben
+we cut of values ingesteld voor de p-value en de fold changes. Voor de
+p-value is er gekozen om deze onder de 0.05 te houden en de fold changes
+moeten hoger zijn dan 1 of lager zijn dan -1. WCFS glucose vs WCFS
+ribose
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{WCFSfinal <-}\StringTok{ }\KeywordTok{filter}\NormalTok{(WCFSglcribres}\OperatorTok{$}\NormalTok{table,  WCFSglcribres}\OperatorTok{$}\NormalTok{table}\OperatorTok{$}\NormalTok{FDR}\OperatorTok{<}\FloatTok{0.005} \OperatorTok{&}\NormalTok{(WCFSglcribres}\OperatorTok{$}\NormalTok{table}\OperatorTok{$}\NormalTok{logFC}\OperatorTok{>}\DecValTok{1}\OperatorTok{|}\NormalTok{WCFSglcribres}\OperatorTok{$}\NormalTok{table}\OperatorTok{$}\NormalTok{logFC}\OperatorTok{<}\NormalTok{(}\OperatorTok{-}\DecValTok{1}\NormalTok{)))}
+\end{Highlighting}
+\end{Shaded}
+
+NC8 glucose vs NC8 ribose
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{NC8final <-}\StringTok{ }\KeywordTok{filter}\NormalTok{(NC8glcribres}\OperatorTok{$}\NormalTok{table,  NC8glcribres}\OperatorTok{$}\NormalTok{table}\OperatorTok{$}\NormalTok{FDR}\OperatorTok{<}\FloatTok{0.005} \OperatorTok{&}\NormalTok{(NC8glcribres}\OperatorTok{$}\NormalTok{table}\OperatorTok{$}\NormalTok{logFC}\OperatorTok{>}\DecValTok{1}\OperatorTok{|}\NormalTok{NC8glcribres}\OperatorTok{$}\NormalTok{table}\OperatorTok{$}\NormalTok{logFC}\OperatorTok{<}\NormalTok{(}\OperatorTok{-}\DecValTok{1}\NormalTok{)))}
+\end{Highlighting}
+\end{Shaded}
+
+Annotatie toevoegen aan de genen die zijn gefiltered en van hoog naar
+laag sorteren
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{WCFS1_sig <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(WCFSfinal, annotation[}\KeywordTok{rownames}\NormalTok{(WCFSfinal),])}
+\NormalTok{NC8_sig <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(NC8final, annotation[}\KeywordTok{rownames}\NormalTok{(NC8final),])}
+\NormalTok{WCFS1_sorted <-}\StringTok{ }\NormalTok{WCFS1_sig[}\KeywordTok{order}\NormalTok{(WCFS1_sig[, }\StringTok{"logFC"}\NormalTok{], }\DataTypeTok{decreasing =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{na.last =} \OtherTok{FALSE}\NormalTok{), ,drop=}\OtherTok{FALSE}\NormalTok{]}
+\NormalTok{NC8_sorted <-}\StringTok{ }\NormalTok{NC8_sig[}\KeywordTok{order}\NormalTok{(NC8_sig[, }\StringTok{"logFC"}\NormalTok{], }\DataTypeTok{decreasing =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{na.last =} \OtherTok{FALSE}\NormalTok{), ,drop=}\OtherTok{FALSE}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+Excel file maken met de data en annotaties
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#write.xlsx(WCFS1_sorted, file = "Merged_Genes.xlsx", sheetName = "WCFS1_data", }
+\CommentTok{#  col.names = TRUE, row.names = TRUE, append = FALSE)}
+\CommentTok{#write.xlsx(NC8_sorted, file = "Merged_Genes.xlsx", sheetName = "NC8_data", }
+\CommentTok{#  col.names = TRUE, row.names = TRUE, append = TRUE)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{kegg-mapper}{%
+\paragraph{KEGG Mapper}\label{kegg-mapper}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{WCFS1_final_names <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\KeywordTok{rownames}\NormalTok{(}\KeywordTok{head}\NormalTok{(WCFS1_sorted, }\DecValTok{5}\NormalTok{)), }\KeywordTok{rownames}\NormalTok{(}\KeywordTok{tail}\NormalTok{(WCFS1_sorted, }\DecValTok{5}\NormalTok{)))}
+\NormalTok{WCFS1<-}\KeywordTok{data.frame}\NormalTok{(WCFS1_final_names)}
+\NormalTok{WCFS1}\OperatorTok{$}\NormalTok{logFC<-}\KeywordTok{c}\NormalTok{((}\KeywordTok{head}\NormalTok{(WCFS1_sorted, }\DecValTok{5}\NormalTok{)}\OperatorTok{$}\NormalTok{logFC), (}\KeywordTok{tail}\NormalTok{(WCFS1_sorted, }\DecValTok{5}\NormalTok{)}\OperatorTok{$}\NormalTok{logFC))}
+\NormalTok{NC8_final_names <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\KeywordTok{rownames}\NormalTok{(}\KeywordTok{head}\NormalTok{(NC8_sorted, }\DecValTok{5}\NormalTok{)), }\KeywordTok{rownames}\NormalTok{(}\KeywordTok{tail}\NormalTok{(NC8_sorted, }\DecValTok{5}\NormalTok{)))}
+\NormalTok{NC8<-}\KeywordTok{data.frame}\NormalTok{(NC8_final_names)}
+\NormalTok{NC8}\OperatorTok{$}\NormalTok{logFC<-}\KeywordTok{c}\NormalTok{((}\KeywordTok{head}\NormalTok{(NC8_sorted, }\DecValTok{5}\NormalTok{)}\OperatorTok{$}\NormalTok{logFC), (}\KeywordTok{tail}\NormalTok{(NC8_sorted, }\DecValTok{5}\NormalTok{)}\OperatorTok{$}\NormalTok{logFC))}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{heat-map}{%
+\paragraph{Heat Map}\label{heat-map}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Sorry ik was verkeerde aan het doen mischien heb je er wel wat aan}
+\NormalTok{HMNC8 =}\StringTok{ }\KeywordTok{data.matrix}\NormalTok{(NC8final }\OperatorTok{%>%}\StringTok{ }\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\NormalTok{(LR}\OperatorTok{:}\NormalTok{FDR)))}
+\KeywordTok{heatmap}\NormalTok{(HMNC8)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Script_files/figure-latex/unnamed-chunk-16-1.pdf}
+
+\hypertarget{resultaten}{%
+\subsection{Resultaten}\label{resultaten}}
+
+\hypertarget{cluster-genes-using-hierarchal-clustering}{%
+\paragraph{Cluster genes using hierarchal
+clustering}\label{cluster-genes-using-hierarchal-clustering}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x <-}\StringTok{ }\KeywordTok{t}\NormalTok{(y}\OperatorTok{$}\NormalTok{counts)}
+\NormalTok{x <-}\StringTok{ }\KeywordTok{dist}\NormalTok{(x, }\DataTypeTok{method =} \StringTok{"euclidean"}\NormalTok{)}
+\NormalTok{x <-}\StringTok{ }\KeywordTok{hclust}\NormalTok{(x, }\DataTypeTok{method =} \StringTok{"average"}\NormalTok{)}
+\KeywordTok{plot}\NormalTok{(x)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Script_files/figure-latex/unnamed-chunk-17-1.pdf}
+
+\hypertarget{pca-plot}{%
+\paragraph{PCA plot}\label{pca-plot}}
+
+De PCA plot (principal component analysis) comprimeert de datasets door
+de data zo veel mogelijk om te zetten naar de 1ste dimensies. Het
+verminderen van dimensies van de variatie in de samples maakt het
+mogelijk om de ze gemakkelijk te visualiseren en met elkaar te
+vergelijken. De X en Y as geven de fold-change in de log2 schaal weer.
+De X-as verklaart de hoogste variatie, in dit geval laat het zien dat
+het verschil in fold-change tussen WCFS1.glucose en WCFS1.ribose zeer
+groot is. Daarbij valt ook op dat de groepen die in de design matrix
+gemaakt zijn weinig variatie met elkaar hebben.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plotMDS}\NormalTok{(y)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Script_files/figure-latex/unnamed-chunk-18-1.pdf}
+
+\hypertarget{dispersie-plot}{%
+\paragraph{Dispersie plot}\label{dispersie-plot}}
+
+De dispersie plot laat de spreiding van de data zien. Dit zegt iets over
+hoe goed de verschillende samples met elkaar te vergelijken zijn. Op de
+X-as staat de CPM (counts per million) op de log schaal en Y-as de
+dispersie. De rode lijn is de common, het ideale scenario. De blauwe
+lijn laat de afwijking zien van variatie van de verschillende samples.
+Hier is te zien dat de trendlijn redelijk overeen komt met de common
+lijn.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plotBCV}\NormalTok{(y)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Script_files/figure-latex/unnamed-chunk-19-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plotBCV}\NormalTok{(f)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Script_files/figure-latex/unnamed-chunk-19-2.pdf}
+
+\hypertarget{k-means}{%
+\paragraph{K-means}\label{k-means}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{km <-}\StringTok{ }\KeywordTok{kmeans}\NormalTok{((NC8final }\OperatorTok{%>%}\StringTok{ }\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\NormalTok{(logCPM}\OperatorTok{:}\NormalTok{FDR))), }\DataTypeTok{centers =} \DecValTok{5}\NormalTok{)}
+\KeywordTok{fviz_cluster}\NormalTok{(km, }\DataTypeTok{data =}\NormalTok{ (NC8final }\OperatorTok{%>%}\StringTok{ }\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\NormalTok{(LR}\OperatorTok{:}\NormalTok{FDR))))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Script_files/figure-latex/unnamed-chunk-20-1.pdf} \#\#
+Conclusie
+
+\end{document}
