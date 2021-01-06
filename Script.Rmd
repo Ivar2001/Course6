@@ -3,9 +3,17 @@ title: "Gene expression of L. plantarum WCFS1"
 author: "Ivar van den Akker, Herke Schuffel, Yuri Wit en Peter Cserei"
 date: "11/24/2020"
 output:
+  word_document:
+    toc: yes
+    toc_depth: '4'
   pdf_document:
-    toc: true
+    toc: yes
     toc_depth: 4
+  html_document:
+    df_print: paged
+    toc: yes
+    toc_depth: '4'
+toctitle: Inhoudsopgave
 ---
 ## Samenvatting
 
@@ -25,6 +33,8 @@ library(dplyr)
 library(xlsx)
 library(factoextra)
 library(cluster)
+library(latexpdf)
+library(tinytex)
 ```
 
 #### Bestand inladen
