@@ -165,6 +165,7 @@ Excel file maken met de data en annotaties
 
 #### KEGG Mapper
 ```{r}
+print("helloworld!")
 #Define pathway to be used (found on KEGG db)
 glycolysispathway <- "lpl00010"
 pentosephyosphatepathway <- "lpl00030"
