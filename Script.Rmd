@@ -31,7 +31,6 @@ library(limma)
 library(edgeR)
 library(dplyr)
 library(xlsx)
-library(pathview)
 library(factoextra)
 library(cluster)
 library(latexpdf)
@@ -165,28 +164,12 @@ Excel file maken met de data en annotaties
 
 #### KEGG Mapper
 ```{r}
-#Define pathway to be used (found on KEGG db)
-glycolysispathway <- "lpl00010"
-pentosephyosphatepathway <- "lpl00030"
-#Load selected genes
-WCFS1genes <- read.xlsx("Merged_Genes.xlsx", 1)
-NC8genes <- read.xlsx("Merged_Genes.xlsx", 2)
-#Seperate logFC of selected genes
-WCFS1logFC <- WCFS1genes$logFC
-NC8logFC <- NC8genes$logFC
-#Set names of the data
-names(WCFS1logFC) <- WCFS1genes$NA.
-names(NC8logFC) <- NC8genes$NA.
-#Generate pathviews
-WCFS1.out <- pathview(gene.data = WCFS1logFC, species = "lpl", pathway = glycolysispathway, gene.idtype = "KEGG")
-file.copy("lpl00010.pathview.png", "WCFS1.lpl00010.pathview.png", overwrite = TRUE)
-NC8.out <- pathview(gene.data = NC8logFC, species = "lpl", pathway = glycolysispathway, gene.idtype = "KEGG")
-file.copy("lpl00010.pathview.png", "NC8.lpl00010.pathview.png", overwrite = TRUE)
-
-WCFS1.out <- pathview(gene.data = WCFS1logFC, species = "lpl", pathway = pentosephyosphatepathway, gene.idtype = "KEGG")
-file.copy("lpl00030.pathview.png", "WCFS1.lpl00030.pathview.png", overwrite = TRUE)
-NC8.out <- pathview(gene.data = NC8logFC, species = "lpl", pathway = pentosephyosphatepathway, gene.idtype = "KEGG")
-file.copy("lpl00030.pathview.png", "NC8.lpl00030.pathview.png", overwrite = TRUE)
+WCFS1_final_names <- c(rownames(head(WCFS1_sorted, 5)), rownames(tail(WCFS1_sorted, 5)))
+WCFS1<-data.frame(WCFS1_final_names)
+WCFS1$logFC<-c((head(WCFS1_sorted, 5)$logFC), (tail(WCFS1_sorted, 5)$logFC))
+NC8_final_names <- c(rownames(head(NC8_sorted, 5)), rownames(tail(NC8_sorted, 5)))
+NC8<-data.frame(NC8_final_names)
+NC8$logFC<-c((head(NC8_sorted, 5)$logFC), (tail(NC8_sorted, 5)$logFC))
 ```
 
 #### Heat Map
@@ -224,7 +207,10 @@ plotBCV(f)
 
 #### K-means
 ```{r}
-km <- kmeans((NC8final %>% select(-(logCPM:FDR))), centers = 5)
+km <- kmeans((NC8final %>% select(-(logCPM:FDR))), centers = 4)
 fviz_cluster(km, data = (NC8final %>% select(-(LR:FDR))))
 ```
+## Discussie
+K-means cluster is niet consistent maakt elke keer andere clusters.
+
 ## Conclusie
