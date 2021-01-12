@@ -131,6 +131,29 @@ NC8 glucose vs NC8 ribose
 ```{r}
 NC8glcribres<-topTags(NC8glcribfit, n=nrow(NC8glcribfit))
 ```
+#### Cluster genes using hierarchal clustering
+
+```{r}
+x <- t(y$counts)
+x <- dist(x, method = "euclidean")
+x <- hclust(x, method = "average")
+plot(x)
+```
+
+#### PCA plot
+De PCA plot (principal component analysis) comprimeert de datasets door de data zo veel mogelijk om te zetten naar de 1ste dimensies. Het verminderen van dimensies van de variatie in de samples maakt het mogelijk om de ze gemakkelijk te visualiseren en met elkaar te vergelijken. De X en Y as geven de fold-change in de log2 schaal weer. De X-as verklaart de hoogste variatie, in dit geval laat het zien dat het verschil in fold-change tussen WCFS1.glucose en WCFS1.ribose zeer groot is. Daarbij valt ook op dat de groepen die in de design matrix gemaakt zijn weinig variatie met elkaar hebben.
+
+```{r}
+plotMDS(y)
+```
+
+#### Dispersie plot
+De dispersie plot laat de spreiding van de data zien. Dit zegt iets over hoe goed de verschillende samples met elkaar te vergelijken zijn. Op de X-as staat de CPM (counts per million) op de log schaal en Y-as de dispersie. De rode lijn is de common, het ideale scenario. De blauwe lijn laat de afwijking zien van variatie van de verschillende samples. Hier is te zien dat de trendlijn redelijk overeen komt met de common lijn. 
+
+```{r}
+plotBCV(y)
+plotBCV(f)
+```
 
 #### Filteren
 Om genen te selecteren die voor ons onderzoek van toepassing zijn hebben we cut of values ingesteld voor de p-value en de fold changes. Voor de p-value is er gekozen om deze onder de 0.05 te houden en de fold changes moeten hoger zijn dan 1 of lager zijn dan -1.
@@ -164,29 +187,6 @@ Excel file maken met de data en annotaties
 #  col.names = TRUE, row.names = TRUE, append = TRUE)
 ```
 
-#### Cluster genes using hierarchal clustering
-
-```{r}
-x <- t(y$counts)
-x <- dist(x, method = "euclidean")
-x <- hclust(x, method = "average")
-plot(x)
-```
-
-#### PCA plot
-De PCA plot (principal component analysis) comprimeert de datasets door de data zo veel mogelijk om te zetten naar de 1ste dimensies. Het verminderen van dimensies van de variatie in de samples maakt het mogelijk om de ze gemakkelijk te visualiseren en met elkaar te vergelijken. De X en Y as geven de fold-change in de log2 schaal weer. De X-as verklaart de hoogste variatie, in dit geval laat het zien dat het verschil in fold-change tussen WCFS1.glucose en WCFS1.ribose zeer groot is. Daarbij valt ook op dat de groepen die in de design matrix gemaakt zijn weinig variatie met elkaar hebben.
-
-```{r}
-plotMDS(y)
-```
-
-#### Dispersie plot
-De dispersie plot laat de spreiding van de data zien. Dit zegt iets over hoe goed de verschillende samples met elkaar te vergelijken zijn. Op de X-as staat de CPM (counts per million) op de log schaal en Y-as de dispersie. De rode lijn is de common, het ideale scenario. De blauwe lijn laat de afwijking zien van variatie van de verschillende samples. Hier is te zien dat de trendlijn redelijk overeen komt met de common lijn. 
-
-```{r}
-plotBCV(y)
-plotBCV(f)
-```
 #### Heat Map
 ```{r}
 # Sorry ik was verkeerde aan het doen mischien heb je er wel wat aan
