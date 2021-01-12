@@ -23,6 +23,7 @@ Doel: When L. plantarum is grown on a ribose-rich medium genes are upregulated t
 ## Materiaal en Methode
 Dit R-script analyseert de expressie van genen van L. plantarum varianten: WCFS1 en NC8. Deze twee bacterien zijn gegroeid op verschillende bodems namelijk glucose (glc) en ribose (rib).
 
+## Resultaten
 #### Library importeren
 Importeren van library's die nodig zijn voor het functioneren van onderstaande script.
 
@@ -162,8 +163,6 @@ Excel file maken met de data en annotaties
 #write.xlsx(NC8_sorted, file = "Merged_Genes.xlsx", sheetName = "NC8_data", 
 #  col.names = TRUE, row.names = TRUE, append = TRUE)
 ```
-
-## Resultaten
 
 #### Cluster genes using hierarchal clustering
 
