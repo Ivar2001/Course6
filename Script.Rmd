@@ -224,10 +224,11 @@ plotBCV(f)
 
 #### K-means
 ```{r}
-km <- kmeans((NC8final %>% select(-(logCPM:FDR))), centers = 4)
+km <- kmeans((NC8final %>% select(-(logCPM:FDR))), centers = 3)
 fviz_cluster(km, data = (NC8final %>% select(-(LR:FDR))))
 ```
 ## Discussie
 K-means cluster is niet consistent maakt elke keer andere clusters.
 
 ## Conclusie
+In dit onderzoek is gekeken of L. plantarum dat op een ribose rijk medium is gegroeid upgereguleerde genen heeft die nodig zijn voor de metabolise van ribose. Uit dit onderzoek is ook gebleken dat de genen van L.plantarum die nodig zijn voor de metabolise van ribose upgereguleerd zijn op een ribose bodem in tegenstelling tot een glucose bodem.
