@@ -189,9 +189,22 @@ Excel file maken met de data en annotaties
 
 #### Heat Map
 ```{r}
-# Sorry ik was verkeerde aan het doen mischien heb je er wel wat aan
-HMNC8 = data.matrix(NC8final %>% select(-(LR:FDR)))
-heatmap(HMNC8)
+heatmap(as.matrix(y), cexCol = 0.9, main="Heatmap counts")
+```
+
+```{r}
+subWCFS <- subset(WCFSfinal, select = -c(logCPM,LR,PValue,FDR))
+subNC8 <- subset(NC8final, select = -c(logCPM,LR,PValue,FDR))
+
+subWCFS <- cbind(id = rownames(subWCFS), subWCFS)
+subNC8 <- cbind(id = rownames(subNC8), subNC8)
+
+mergeNC8WCFS <- merge(x = subWCFS, y = subNC8, by = "id", all.x = TRUE)
+
+colnames(mergeNC8WCFS)[2] <- "WCFS1"
+colnames(mergeNC8WCFS)[3] <- "NC8"
+
+heatmap(data.matrix(subset(mergeNC8WCFS, select = -c(id))), cexCol = 1, main="Heatmap Foldchanges")
 ```
 
 #### KEGG Mapper
